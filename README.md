@@ -1,2 +1,3 @@
-# hidden-markov-models
-An implementation of Hidden Markov Models
+# Hidden Markov Models
+
+Hidden Markov Models (HMMs) implemented in Python!
