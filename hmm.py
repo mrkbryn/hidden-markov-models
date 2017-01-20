@@ -1,4 +1,5 @@
 import numpy as np
+from collections import Counter
 
 class HMM:
     """Represents a Hidden Markov Model"""
@@ -20,7 +21,7 @@ class HMM:
         # total number of observations seen from that state. This will be used to calculate conditional probabilities
         # i.e. P(observing observation_x given state_y) = dict["observation_x"]/num_observations(state_y)
         # i.e. P(.) = dict["observation_x"]/observations_at_state_y
-        self.observation_counts = [({},0)] * (len(self.states) + 2)
+        self.observation_counts = [Counter() for _ in range(len(self.states) + 2)]
     
     def index_of_state(self, state):
         """Returns index of states that will be used to determine which entries in
@@ -33,10 +34,32 @@ class HMM:
         # TODO: throw error here? InvalidStateException?
         return self.states.index(state) if state in self.states else -1
     
+    # Mark: probability generation functions
+    
     def emission_probability(self, state, observation):
-        pass
+        index = self.index_of_state(state)
+        counter = self.observation_counts[index]
+        
+        total_count = sum(counter.values())
+        
+        # protect against divide by 0
+        if total_count == 0:
+            return 0.0
+        
+        # counter[observation] returns 0 if observation hasn't been seen
+        return float(counter[observation]) / total_count
     
     def transition_probability(self, first_state, second_state):
+        pass
+    
+    # Mark: training methods
+    
+    def add_observation(self, state, observation):
+        index = self.index_of_state(state)
+        counter = self.observation_counts[index]
+        counter[observation] += 1
+    
+    def add_transition(self, from_state, to_state):
         pass
     
     def __str__(self):
